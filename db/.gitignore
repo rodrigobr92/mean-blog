@@ -1,0 +1,7 @@
+# exclude everything
+data/*
+log/*
+
+# exception to the rule
+!data/.gitkeep 
+!log/.gitkeep 

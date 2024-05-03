@@ -1,0 +1,17 @@
+{
+  "name": "mean-blog",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client && npm start",
+    "api": "cd api && npm start",
+    "db": "cd db && npm start",
+    "start": "concurrently \"npm run db\" \"npm run api\" \"npm run client\" "
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

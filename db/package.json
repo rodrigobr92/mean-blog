@@ -1,0 +1,11 @@
+{
+  "name": "blog-db",
+  "version": "0.0.1",
+  "description": "To create authentication:",
+  "main": "index.js",
+  "scripts": {
+    "start": "mongod --dbpath ./data --logpath ./log/mongod.log"
+  },
+  "author": "",
+  "license": "ISC"
+}
