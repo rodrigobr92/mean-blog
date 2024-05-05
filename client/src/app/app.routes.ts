@@ -3,14 +3,14 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    title: 'AndOther Blog',
+    title: 'Simple Blog',
     loadComponent: () =>
-      import('./pages/home/home.component').then((x) => x.HomeComponent),
+      import('./home/home.component').then((x) => x.HomeComponent),
   },
   {
     path: '**',
-    title: 'AndOther Error',
+    title: 'Error',
     loadComponent: () =>
-      import('./pages/error/error.component').then((x) => x.ErrorComponent),
+      import('./error/error.component').then((x) => x.ErrorComponent),
   },
 ];

@@ -3,7 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { PostService } from '../../../services/post/post.service';
+import { PostService } from '../post-service/post.service';
 
 @Component({
   selector: 'app-post-form',

@@ -11,7 +11,7 @@ describe('PostListComponent', () => {
       imports: [PostListComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

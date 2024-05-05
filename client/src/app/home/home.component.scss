@@ -1,0 +1,10 @@
+:host {
+  display: flex;
+
+  app-post-list {
+    flex: 1 1 auto;
+  }
+  app-comment-list {
+    flex: 0 0 fit-content;
+  }
+}

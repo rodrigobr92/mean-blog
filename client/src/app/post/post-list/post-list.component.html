@@ -1,0 +1,21 @@
+<p-inputGroup>
+  <p-inputGroupAddon>
+    <i class="icon-search"></i>
+  </p-inputGroupAddon>
+  <input
+    type="text"
+    pInputText
+    [(ngModel)]="searchValue"
+  />
+  @if (isSearchLoading) {
+    <p-inputGroupAddon>
+      <i class="icon-loader-circle"></i>
+    </p-inputGroupAddon>
+  }
+</p-inputGroup>
+
+@for (post of postList; track $index) {
+<app-post-item [post]="post" />
+} @empty {
+<div>Nenhum post adicionado</div>
+}

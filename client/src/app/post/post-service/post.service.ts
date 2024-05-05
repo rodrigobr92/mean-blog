@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { PostItem } from '../../components/post/post.types';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { PostItem } from '../post.model';
 
 @Injectable({
   providedIn: 'root',
