@@ -4,7 +4,11 @@ To create authentication:
 
 1) At the mongo command line, set the administrator:
 
-    mongod --dbpath ./blog-db/data --logpath ./blog-db/log/mongod.log 
+    // Start the server on the terminal
+    
+    mongod --dbpath ./db/data --logpath ./db/log/mongod.log 
+
+    // run mongo shell and:
 
     use admin;
 
@@ -24,6 +28,6 @@ To create authentication:
     db.shutdownServer();
     exit
 
-3) Start mongod with auth
+3) Start mongod, now with auth
 
-  $ mongod --dbpath ./blog-db/data --logpath ./blog-db/log/mongod.log
+  $ mongod --dbpath ./db/data --logpath ./db/log/mongod.log

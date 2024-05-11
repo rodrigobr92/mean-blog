@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import 'open-color/open-color.css';
 @import "primeng/resources/themes/aura-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 @import "lucide-static/font/lucide.css";
+@import './variables.scss';
+@import './colors.scss';
 @import "./base.scss"
