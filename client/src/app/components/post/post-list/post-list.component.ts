@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { Pagination } from '../../../types/shared.types';
 
 @Component({
   selector: 'app-post-list',
@@ -23,6 +25,7 @@ import { Router } from '@angular/router';
     InputGroupModule,
     InputGroupAddonModule,
     FormsModule,
+    ButtonModule,
   ],
   template: `
     <div class="post-list">
@@ -42,6 +45,19 @@ import { Router } from '@angular/router';
         }
       </p-inputGroup>
 
+      <div>
+        <p-button
+          icon="icon-arrow-big-left"
+          [disabled]="pagination.page == 1"
+          (onClick)="previousPage()"
+        ></p-button>
+        <p-button
+          icon="icon-arrow-big-right"
+          [disabled]="isLastPage()"
+          (onClick)="nextPage()"
+        ></p-button>
+        <span>{{ this.pagination.total }}</span>
+      </div>
       @for (post of postList; track $index) {
       <app-post-item
         [isAdmin]="isAdmin"
@@ -77,6 +93,11 @@ export class PostListComponent
   isSearchLoading: boolean = false;
   postList: PostItem[] = [];
   postSubscription!: Subscription;
+  pagination: Pagination = {
+    page: 1,
+    pageSize: 2,
+    total: 0
+  };
 
   constructor(
     private postService: PostService,
@@ -84,11 +105,16 @@ export class PostListComponent
   ) {}
 
   ngOnInit(): void {
+    this.getPosts();
+  }
+
+  getPosts(): void {
     this.postService.getPostList();
     this.postSubscription =
       this.postService.postsSub.subscribe(
         (postList: PostItem[]) => {
           this.postList = postList;
+          this.pagination = this.postService.getPagination();
         }
       );
   }
@@ -101,5 +127,19 @@ export class PostListComponent
     if (!this.isAdmin) {
       this.router.navigateByUrl(`post/${_id}`);
     }
+  }
+
+  nextPage(): void {
+    this.postService.changePage(++this.pagination.page);
+    this.getPosts();
+  }
+
+  previousPage(): void {
+    this.postService.changePage(--this.pagination.page);
+    this.getPosts();
+  }
+
+  isLastPage(): boolean {
+    return this.postService.isLastPage();
   }
 }

@@ -22,10 +22,6 @@
       "ES2022",
       "dom"
     ],
-    "typeRoots": [
-      "node_modules/@types",
-      "node_modules/@angular",
-      "node_modules/primeng"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

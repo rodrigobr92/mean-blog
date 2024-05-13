@@ -2,6 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import PostSchema from '../models/post.schema';
+import mongoose from 'mongoose';
 
 const router = Router();
 
@@ -48,6 +49,8 @@ router.post('', upload.single('image'), (req, res) => {
     title: req.body.title,
     content: req.body.content,
     imagePath: imagePath,
+    updatedDate: Date.now(),
+    createdDate: Date.now(),
   });
   post.save().then((createdPost) => {
     res.status(201).json({
@@ -58,42 +61,60 @@ router.post('', upload.single('image'), (req, res) => {
   });
 });
 
-router.put(
-  '',
-  upload.single('image'),
-  (req, res, next) => {
-    console.log(req.body);
-    let imagePath = req.body.imagePath;
-    if (req.file) {
-      imagePath =
-        req.protocol +
-        '://' +
-        req.get('host') +
-        '/uploads/' +
-        req.file.filename;
-    }
-    const post = new PostSchema({
-      _id: req.body._id,
-      title: req.body.title,
-      content: req.body.content,
-      imagePath: imagePath,
-      updatedDate: Date.now(),
-    });
-    PostSchema.updateOne({ _id: req.body._id }, post).then(
-      (result) => {
-        console.log(result);
-        res
-          .status(200)
-          .json({ message: 'Update successful!' });
-      }
-    );
+router.put('', upload.single('image'), (req, res, next) => {
+  console.log(req.body);
+  let imagePath = req.body.imagePath;
+  if (req.file) {
+    imagePath =
+      req.protocol +
+      '://' +
+      req.get('host') +
+      '/uploads/' +
+      req.file.filename;
   }
-);
+  const post = new PostSchema({
+    _id: req.body._id,
+    title: req.body.title,
+    content: req.body.content,
+    imagePath: imagePath,
+    updatedDate: Date.now(),
+  });
+  PostSchema.updateOne({ _id: req.body._id }, post).then(
+    (result) => {
+      console.log(result);
+      res
+        .status(200)
+        .json({ message: 'Update successful!' });
+    }
+  );
+});
 
-router.get('', (req, res, next) => {
-  PostSchema.find().then((documents) => {
+router.get('', async (req, res, next) => {
+  const query = {
+    page: Number(req.query.page),
+    pageSize: Number(req.query.pageSize),
+  };
+  const pageTotal =
+    await PostSchema.estimatedDocumentCount();
+
+  const postFind = PostSchema.find().sort([
+    ['createdDate', -1],
+  ]);
+
+  if (query.page > 1) {
+    postFind.skip(query.pageSize * (query.page - 1));
+  }
+  if (query.pageSize) {
+    postFind.limit(query.pageSize);
+  }
+  postFind.then((documents) => {
     res.status(200).json({
       message: 'Posts fetched successfully!',
+      pagination: {
+        page: query.page,
+        pageSize: query.pageSize,
+        total: pageTotal,
+      },
       posts: documents,
     });
   });

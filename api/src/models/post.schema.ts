@@ -5,7 +5,7 @@ const postSchema = new mongoose.Schema({
   content: { type: String, required: true },
   imagePath: { type: String },
   updatedDate: { type: Date },
-  createdDate: { type: Date, default: Date.now },
+  createdDate: { type: Date },
 })
 
 export default mongoose.model('Post', postSchema);

@@ -1,5 +1,5 @@
-import { ManagePostPageComponent } from './pages/admin/manage-post-page/manage-post-page.component';
 import { Routes } from '@angular/router';
+import { AuthGuard } from './components/auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -7,7 +7,7 @@ export const routes: Routes = [
     title: 'Simple Blog',
     loadComponent: () =>
       import(
-        './pages/user-template/user-template.component'
+        './pages/page-template/page-template.component'
       ).then((x) => x.UserTemplateComponent),
     children: [
       {
@@ -20,7 +20,7 @@ export const routes: Routes = [
       },
       {
         path: 'post/:id',
-        title: 'Simple Blog Post',
+        title: 'Simple Blog - Post',
         loadComponent: () =>
           import(
             './pages/post-page/post-page.component'
@@ -30,7 +30,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    title: 'Simple Blog Admin',
+    title: 'Simple Blog - Admin',
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import(
         './pages/admin/admin-template/admin-template.component'

@@ -1,6 +1,10 @@
+import { Pagination } from './../../types/shared.types';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpParams,
+} from '@angular/common/http';
 import { PostItem } from '../../components/post/post.model';
 
 @Injectable({
@@ -8,18 +12,51 @@ import { PostItem } from '../../components/post/post.model';
 })
 export class PostService {
   private posts: PostItem[] = [];
+  private pagination: Pagination = {
+    page: 1,
+    pageSize: 2,
+    total: 0,
+  };
+
   public postsSub = new Subject<PostItem[]>();
   private apiUrl = 'http://localhost:3333/api/posts';
 
   constructor(private http: HttpClient) {}
 
+  setPagination(pagination: Pagination) {
+    this.pagination = pagination;
+  }
+
+  getPagination(): Pagination {
+    return this.pagination;
+  }
+
+  changePage(page: number) {
+    this.pagination.page = page;
+  }
+
+  isLastPage() {
+    return (
+      this.pagination.total / this.pagination.pageSize <=
+      this.pagination.page
+    );
+  }
+
   getPostList() {
     this.http
-      .get<{ message: string; posts: PostItem[] }>(
-        `${this.apiUrl}`
-      )
+      .get<{
+        message: string;
+        pagination: Pagination;
+        posts: PostItem[];
+      }>(`${this.apiUrl}`, {
+        params: {
+          page: this.pagination.page,
+          pageSize: this.pagination.pageSize,
+        },
+      })
       .subscribe((e) => {
         this.posts = e.posts;
+        this.pagination = e.pagination;
         this.postsSub.next(this.posts.slice());
       });
   }
