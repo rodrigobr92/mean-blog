@@ -31,7 +31,7 @@ import { AuthService } from '../../services/auth-service/auth.service';
   template: `
     <p-dialog
       header="Welcome"
-      position="center"
+      position="topright"
       [modal]="true"
       [closeOnEscape]="true"
       [draggable]="false"
@@ -75,7 +75,8 @@ import { AuthService } from '../../services/auth-service/auth.service';
             />
             @if (
               password.invalid &&
-              password.dirty && password.touched
+              password.dirty &&
+              password.touched
             ) {
               <p *ngIf="password.hasError('minlength')">
                 Password must be 6 charaters or more
@@ -111,7 +112,7 @@ import { AuthService } from '../../services/auth-service/auth.service';
               email
             />
             <input
-              name="user"
+              name="username"
               type="text"
               ngModel
               #user="ngModel"
@@ -149,7 +150,7 @@ import { AuthService } from '../../services/auth-service/auth.service';
                 'passwordMismatch'
               ] &&
               confirmPassword.dirty &&
-                confirmPassword.touched
+              confirmPassword.touched
             ) {
               <p> Password does not match </p>
             }
@@ -207,6 +208,8 @@ export class AuthComponent implements OnInit {
       form.value.email,
       form.value.password,
     );
+
+    this.visible = false;
   }
 
   onSignup(form: NgForm) {
@@ -215,9 +218,12 @@ export class AuthComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    this.authService.createUser(
-      form.value.email,
-      form.value.password,
-    );
+    this.authService.createUser({
+      email: form.value.email,
+      password: form.value.password,
+      username: form.value.username,
+    });
+
+    this.visible = false;
   }
 }

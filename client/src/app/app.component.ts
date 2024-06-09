@@ -14,8 +14,8 @@ import { AuthService } from './services/auth-service/auth.service';
 export class AppComponent implements OnInit {
   constructor(
     private primengConfig: PrimeNGConfig,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+  ) {}
 
   ngOnInit() {
     this.primengConfig.ripple = true;

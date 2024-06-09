@@ -35,7 +35,5 @@ import { UserListComponent } from '../../components/user/user-list/user-list.com
   `,
 })
 export class HomeComponent implements OnInit {
-  ngOnInit() {
-    console.log('Test');
-  }
+  ngOnInit() {}
 }

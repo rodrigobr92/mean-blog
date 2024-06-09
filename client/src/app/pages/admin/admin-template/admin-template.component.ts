@@ -1,6 +1,7 @@
 import { ButtonModule } from 'primeng/button';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../../services/auth-service/auth.service';
 
 @Component({
   selector: 'app-admin-template',
@@ -9,16 +10,20 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   template: `
     <!-- Admin template -->
     <div class="admin-header">
-      <p-button routerLink="/admin">Admin</p-button>
+      <h1><a routerLink="/admin">Admin</a></h1>
+      <p-button routerLink="/admin/post/create"
+        >Create post</p-button
+      >
+      <p-button (click)="logout()">Logout</p-button>
       <p-button routerLink="/">Home</p-button>
-      <p-button routerLink="/admin/post/create">Create post</p-button>
-      <h1>Admin header</h1>
     </div>
+
     <router-outlet></router-outlet>
 
     <style>
       :host {
         .admin-header {
+          justify-content: space-between;
           display: flex;
           gap: 16px;
           padding: 20px 0;
@@ -27,4 +32,10 @@ import { RouterLink, RouterOutlet } from '@angular/router';
     </style>
   `,
 })
-export class AdminTemplateComponent {}
+export class AdminTemplateComponent implements OnInit {
+  constructor(private authService: AuthService) {}
+  ngOnInit(): void {}
+  logout() {
+    this.authService.logout();
+  }
+}

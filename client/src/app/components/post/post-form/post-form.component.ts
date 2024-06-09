@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  NgForm,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -12,9 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { PostService } from '../../../services/post-service/post.service';
 import {
-  FileBeforeUploadEvent,
   FileSelectEvent,
-  FileUploadEvent,
   FileUploadModule,
 } from 'primeng/fileupload';
 
@@ -30,47 +27,49 @@ import {
   ],
   template: `
     <h3>Create</h3>
-    @if(!isLoading) {
-    <form
-      class="post-form"
-      [formGroup]="postForm"
-      enctype="multipart/form-data"
-      (ngSubmit)="submitPost()"
-    >
-      <p-fileUpload
-        mode="basic"
-        chooseLabel="Upload an Image"
-        accept="image/*"
-        (onSelect)="onUploadImage($event)"
-      />
+    @if (!isLoading) {
+      <form
+        class="post-form"
+        [formGroup]="postForm"
+        enctype="multipart/form-data"
+        (ngSubmit)="submitPost()"
+      >
+        <p-fileUpload
+          mode="basic"
+          chooseLabel="Upload an Image"
+          accept="image/*"
+          (onSelect)="onUploadImage($event)"
+        />
 
-      @if(imagePreview) {
-      <div class="image-preview">
-        <img [src]="imagePreview" />
-      </div>
-      }
-      <label for="title">Title</label>
-      <input
-        id="title"
-        type="text"
-        pInputText
-        formControlName="title"
-      />
-      <label for="content">Content</label>
-      <textarea
-        id="content"
-        rows="5"
-        cols="30"
-        pInputTextarea
-        formControlName="content"
-      ></textarea>
-      <p-button
-        label="Submit"
-        type="submit"
-        [disabled]="!postForm.valid"
-      ></p-button>
-    </form>
-    } @else { Saving... }
+        @if (imagePreview) {
+          <div class="image-preview">
+            <img [src]="imagePreview" />
+          </div>
+        }
+        <label for="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          pInputText
+          formControlName="title"
+        />
+        <label for="content">Content</label>
+        <textarea
+          id="content"
+          rows="5"
+          cols="30"
+          pInputTextarea
+          formControlName="content"
+        ></textarea>
+        <p-button
+          label="Submit"
+          type="submit"
+          [disabled]="!postForm.valid"
+        ></p-button>
+      </form>
+    } @else {
+      Saving...
+    }
     <style>
       .post-form {
         display: flex;
@@ -95,7 +94,7 @@ export class PostFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private postService: PostService
+    private postService: PostService,
   ) {}
 
   ngOnInit(): void {
@@ -114,7 +113,7 @@ export class PostFormComponent implements OnInit {
         ],
       }),
       image: new FormControl(null),
-      iamgePath: new FormControl(null)
+      iamgePath: new FormControl(null),
     });
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -123,7 +122,7 @@ export class PostFormComponent implements OnInit {
           .getPostItem(id)
           .subscribe((result) => {
             this.postForm.patchValue(result.post);
-            if(result.post.imagePath) {
+            if (result.post.imagePath) {
               this.imagePreview = result.post.imagePath;
             }
             // this.postForm = result.post;

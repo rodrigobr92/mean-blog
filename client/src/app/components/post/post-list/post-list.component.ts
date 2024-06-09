@@ -39,9 +39,9 @@ import { Pagination } from '../../../types/shared.types';
           [(ngModel)]="searchValue"
         />
         @if (isSearchLoading) {
-        <p-inputGroupAddon>
-          <i class="icon-loader-circle"></i>
-        </p-inputGroupAddon>
+          <p-inputGroupAddon>
+            <i class="icon-loader-circle"></i>
+          </p-inputGroupAddon>
         }
       </p-inputGroup>
 
@@ -56,16 +56,15 @@ import { Pagination } from '../../../types/shared.types';
           [disabled]="isLastPage()"
           (onClick)="nextPage()"
         ></p-button>
-        <span>{{ this.pagination.total }}</span>
       </div>
       @for (post of postList; track $index) {
-      <app-post-item
-        [isAdmin]="isAdmin"
-        [post]="post"
-        (click)="openPost(post._id)"
-      />
+        <app-post-item
+          [isAdmin]="isAdmin"
+          [post]="post"
+          (click)="openPost(post._id)"
+        />
       } @empty {
-      <div>Nenhum post adicionado</div>
+        <div>Nenhum post adicionado</div>
       }
     </div>
 
@@ -96,12 +95,12 @@ export class PostListComponent
   pagination: Pagination = {
     page: 1,
     pageSize: 2,
-    total: 0
+    total: 0,
   };
 
   constructor(
     private postService: PostService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -114,8 +113,10 @@ export class PostListComponent
       this.postService.postsSub.subscribe(
         (postList: PostItem[]) => {
           this.postList = postList;
-          this.pagination = this.postService.getPagination();
-        }
+          console.log(this.postList);
+          this.pagination =
+            this.postService.getPagination();
+        },
       );
   }
 

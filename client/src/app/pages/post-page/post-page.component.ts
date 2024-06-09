@@ -9,16 +9,22 @@ import { PostService } from '../../services/post-service/post.service';
   standalone: true,
   imports: [DatePipe],
   template: `
-    @if(post) {
-    <h4>{{ post.title }}</h4>
-    @if(post.imagePath) {
-    <div class="img-container">Image</div>
-    }
-    <p class="content">{{ post.content }}</p>
-    <p class="userdate"
-      ><b>Username</b> -
-      <i>{{ post.createdDate | date : 'dd/MM/yyyy HH:mm' }}</i></p
-    >
+    @if (post) {
+      <h4>{{ post.title }}</h4>
+      @if (post.imagePath) {
+        <img
+          width="300px"
+          class="img-container"
+          [src]="post.imagePath"
+        />
+      }
+      <p class="content">{{ post.content }}</p>
+      <p class="userdate"
+        ><b>Username</b> -
+        <i>{{
+          post.createdDate | date: 'dd/MM/yyyy HH:mm'
+        }}</i></p
+      >
     }
   `,
 })
@@ -26,7 +32,7 @@ export class PostPageComponent implements OnInit {
   post!: PostItem;
   constructor(
     private postService: PostService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {

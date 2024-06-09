@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import PostSchema from '../models/post.schema';
-import mongoose from 'mongoose';
+import checkAuth from '../middleware/check-auth';
 
 const router = Router();
 
@@ -13,10 +13,10 @@ const MIME_TYPE_MAP: { [key: string]: string } = {
 };
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, file, cb) => {
     const isValid = MIME_TYPE_MAP[file.mimetype];
     let error: Error | null = new Error(
-      'Invalid mime type'
+      'Invalid mime type',
     );
     if (isValid) {
       error = null;
@@ -35,59 +35,69 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post('', upload.single('image'), (req, res) => {
-  let imagePath: string | undefined;
-  if (req.file) {
-    imagePath =
-      req.protocol +
-      '://' +
-      req.get('host') +
-      '/uploads/' +
-      req.file.filename;
-  }
-  const post = new PostSchema({
-    title: req.body.title,
-    content: req.body.content,
-    imagePath: imagePath,
-    updatedDate: Date.now(),
-    createdDate: Date.now(),
-  });
-  post.save().then((createdPost) => {
-    res.status(201).json({
-      message: 'Post added successfully',
-      postId: createdPost._id,
+router.post(
+  '',
+  checkAuth,
+  upload.single('image'),
+  (req, res) => {
+    let imagePath: string | undefined;
+    if (req.file) {
+      imagePath =
+        req.protocol +
+        '://' +
+        req.get('host') +
+        '/uploads/' +
+        req.file.filename;
+    }
+    const post = new PostSchema({
+      title: req.body.title,
+      content: req.body.content,
+      imagePath: imagePath,
+      updatedDate: Date.now(),
+      createdDate: Date.now(),
+    });
+    post.save().then((createdPost) => {
+      res.status(201).json({
+        message: 'Post added successfully',
+        postId: createdPost._id,
+        updatedDate: Date.now(),
+      });
+    });
+  },
+);
+
+router.put(
+  '',
+  checkAuth,
+  upload.single('image'),
+  (req, res, next) => {
+    console.log(req.body);
+    let imagePath = req.body.imagePath;
+    if (req.file) {
+      imagePath =
+        req.protocol +
+        '://' +
+        req.get('host') +
+        '/uploads/' +
+        req.file.filename;
+    }
+    const post = new PostSchema({
+      _id: req.body._id,
+      title: req.body.title,
+      content: req.body.content,
+      imagePath: imagePath,
       updatedDate: Date.now(),
     });
-  });
-});
-
-router.put('', upload.single('image'), (req, res, next) => {
-  console.log(req.body);
-  let imagePath = req.body.imagePath;
-  if (req.file) {
-    imagePath =
-      req.protocol +
-      '://' +
-      req.get('host') +
-      '/uploads/' +
-      req.file.filename;
-  }
-  const post = new PostSchema({
-    _id: req.body._id,
-    title: req.body.title,
-    content: req.body.content,
-    imagePath: imagePath,
-    updatedDate: Date.now(),
-  });
-  PostSchema.updateOne({ _id: req.body._id }, post).then(
-    (result) => {
-      console.log(result);
-      res
-        .status(200)
-        .json({ message: 'Update successful!' });
-    }
-  );
-});
+    PostSchema.updateOne({ _id: req.body._id }, post).then(
+      (result) => {
+        console.log(result);
+        res
+          .status(200)
+          .json({ message: 'Update successful!' });
+      },
+    );
+  },
+);
 
 router.get('', async (req, res, next) => {
   const query = {
@@ -133,12 +143,12 @@ router.get('/:id', (req, res, next) => {
   });
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', checkAuth, (req, res, next) => {
   PostSchema.deleteOne({ _id: req.params.id }).then(
     (result) => {
       console.log(result);
       res.status(200).json({ message: 'Post deleted!' });
-    }
+    },
   );
 });
 
