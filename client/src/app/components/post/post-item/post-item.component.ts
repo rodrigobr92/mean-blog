@@ -18,80 +18,41 @@ import { PostService } from '../../../services/post-service/post.service';
   imports: [DatePipe, ButtonModule],
   template: `
     <h4 class="title">{{ post.title }}</h4>
-    @if(post.imagePath) {
-    <div class="img-container">
-      <img [src]="post.imagePath">
-    </div>
+    @if (post.imagePath) {
+      <div class="img-container">
+        <img
+          width="300px"
+          [src]="post.imagePath"
+        />
+      </div>
     }
     <p class="content">{{ post.content }}</p>
     <p class="userdate"
       ><b>Username</b> -
-      <i>{{ post.createdDate | date : 'dd/MM/yyyy HH:mm' }}</i></p
+      <i>{{
+        post.createdDate | date: 'dd/MM/yyyy HH:mm'
+      }}</i></p
     >
-    @if(isAdmin) {
-    <div class="button-container">
-      <p-button
-        severity="secondary"
-        icon="icon-pencil"
-        label="Edit"
-        (click)="$event.stopPropagation(); onEdit(post._id)"
-      />
-      <p-button
-        severity="danger"
-        icon="icon-trash"
-        label="Delete"
-        (click)="
-          $event.stopPropagation(); onDelete(post._id)
-        "
-      />
-    </div>
+    @if (isAdmin) {
+      <div class="button-container">
+        <p-button
+          severity="secondary"
+          icon="icon-pencil"
+          label="Edit"
+          (click)="
+            $event.stopPropagation(); onEdit(post._id)
+          "
+        />
+        <p-button
+          severity="danger"
+          icon="icon-trash"
+          label="Delete"
+          (click)="
+            $event.stopPropagation(); onDelete(post._id)
+          "
+        />
+      </div>
     }
-
-    <style lang="scss">
-      :host {
-        padding: 16px 24px;
-        background: var(--oc-blue-9);
-        border-radius: 8px;
-
-        &:not(.admin) {
-          &:hover {
-            cursor: pointer;
-            background: var(--oc-blue-8);
-          }
-        }
-
-        .title {
-          color: var(--oc-gray-1);
-          font-size: 1.6rem;
-        }
-
-        .img-container {
-          img {
-            padding: 20px 0;
-            max-height: 200px;
-          }
-        }
-
-        p {
-          color: var(--oc-gray-0);
-          line-height: 1.6;
-
-          &.content {
-            font-size: 1.2rem;
-          }
-
-          &.userdate {
-            font-size: 0.8rem;
-          }
-        }
-
-        .button-container {
-          display: flex;
-          padding: 16px 0;
-          gap: 16px;
-        }
-      }
-    </style>
   `,
 })
 export class PostItemComponent implements OnInit {
@@ -101,7 +62,10 @@ export class PostItemComponent implements OnInit {
   @Output() delete = new EventEmitter<string>();
   @HostBinding('class.admin') adminClass: boolean = false;
 
-  constructor(private router: Router, private postService: PostService){}
+  constructor(
+    private router: Router,
+    private postService: PostService,
+  ) {}
 
   ngOnInit(): void {
     if (this.isAdmin) {

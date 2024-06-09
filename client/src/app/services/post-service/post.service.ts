@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
   HttpClient,
-  HttpParams,
 } from '@angular/common/http';
 import { PostItem } from '../../components/post/post.model';
 

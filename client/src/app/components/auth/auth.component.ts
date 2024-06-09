@@ -31,7 +31,7 @@ import { AuthService } from '../../services/auth-service/auth.service';
   template: `
     <p-dialog
       header="Welcome"
-      position="topright"
+      position="center"
       [modal]="true"
       [closeOnEscape]="true"
       [draggable]="false"
@@ -57,9 +57,10 @@ import { AuthService } from '../../services/auth-service/auth.service';
               required
               email
             />
-            @if (email.invalid && (email.dirty &&
-            email.touched)) {
-            <p>Invalid email</p>
+            @if (
+              email.invalid && email.dirty && email.touched
+            ) {
+              <p>Invalid email</p>
             }
             <p-password
               placeholder="Password"
@@ -72,11 +73,13 @@ import { AuthService } from '../../services/auth-service/auth.service';
               #password="ngModel"
               ngModel
             />
-            @if (password.invalid && (password.dirty &&
-            password.touched)) {
-            <p *ngIf="password.hasError('minlength')">
-              Password must be 6 charaters or more
-            </p>
+            @if (
+              password.invalid &&
+              password.dirty && password.touched
+            ) {
+              <p *ngIf="password.hasError('minlength')">
+                Password must be 6 charaters or more
+              </p>
             }
             <div>
               <p-button
@@ -141,10 +144,14 @@ import { AuthService } from '../../services/auth-service/auth.service';
               required
               [toggleMask]="true"
             />
-            @if (confirmPassword.errors?.['passwordMismatch'] && (confirmPassword.dirty && confirmPassword.touched)) {
-            <p>
-              Password does not match
-            </p>
+            @if (
+              confirmPassword.errors?.[
+                'passwordMismatch'
+              ] &&
+              confirmPassword.dirty &&
+                confirmPassword.touched
+            ) {
+              <p> Password does not match </p>
             }
             <div>
               <p-button
@@ -188,7 +195,7 @@ export class AuthComponent implements OnInit {
 
   constructor(public authService: AuthService) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   onLogin(form: NgForm) {
     console.log('login');
@@ -196,7 +203,10 @@ export class AuthComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    this.authService.login(form.value.email, form.value.password);
+    this.authService.login(
+      form.value.email,
+      form.value.password,
+    );
   }
 
   onSignup(form: NgForm) {
@@ -205,6 +215,9 @@ export class AuthComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    this.authService.createUser(form.value.email, form.value.password);
+    this.authService.createUser(
+      form.value.email,
+      form.value.password,
+    );
   }
 }

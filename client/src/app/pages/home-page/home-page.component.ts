@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommentListComponent } from '../../components/comment/comment-list/comment-list.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { PostListComponent } from '../../components/post/post-list/post-list.component';
@@ -34,4 +34,8 @@ import { UserListComponent } from '../../components/user/user-list/user-list.com
     </style>
   `,
 })
-export class HomeComponent {}
+export class HomeComponent implements OnInit {
+  ngOnInit() {
+    console.log('Test');
+  }
+}
