@@ -60,6 +60,9 @@ import { Pagination } from '../../../types/shared.types';
       @for (post of postList; track $index) {
         <app-post-item
           [isAdmin]="isAdmin"
+          [isEditor]="
+            userId ? post.userId === userId : false
+          "
           [post]="post"
           (click)="openPost(post._id)"
         />
@@ -88,6 +91,7 @@ export class PostListComponent
   implements OnInit, OnDestroy
 {
   @Input() isAdmin?: boolean;
+  @Input() userId?: string;
   searchValue: string = '';
   isSearchLoading: boolean = false;
   postList: PostItem[] = [];

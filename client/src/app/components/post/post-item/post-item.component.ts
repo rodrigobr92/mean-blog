@@ -28,12 +28,12 @@ import { PostService } from '../../../services/post-service/post.service';
     }
     <p class="content">{{ post.content }}</p>
     <p class="userdate"
-      ><b>Username</b> -
+      ><b>{{ post.username }}</b> -
       <i>{{
         post.createdDate | date: 'dd/MM/yyyy HH:mm'
       }}</i></p
     >
-    @if (isAdmin) {
+    @if (isAdmin && isEditor) {
       <div class="button-container">
         <p-button
           severity="secondary"
@@ -58,6 +58,7 @@ import { PostService } from '../../../services/post-service/post.service';
 export class PostItemComponent implements OnInit {
   @Input() post!: PostItem;
   @Input() isAdmin?: boolean;
+  @Input() isEditor?: boolean;
   @Output() edit = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
   @HostBinding('class.admin') adminClass: boolean = false;

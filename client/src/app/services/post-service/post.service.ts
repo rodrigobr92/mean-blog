@@ -57,6 +57,7 @@ export class PostService {
         this.posts = e.posts;
         this.pagination = e.pagination;
         this.postsSub.next(this.posts.slice());
+        console.log(e);
       });
   }
 

@@ -20,7 +20,7 @@ import { PostService } from '../../services/post-service/post.service';
       }
       <p class="content">{{ post.content }}</p>
       <p class="userdate"
-        ><b>Username</b> -
+        ><b>{{ post.username }}</b> -
         <i>{{
           post.createdDate | date: 'dd/MM/yyyy HH:mm'
         }}</i></p

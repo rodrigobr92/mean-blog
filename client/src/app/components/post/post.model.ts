@@ -6,4 +6,6 @@ export interface PostItem {
   imagePath?: string;
   createdDate: Date | string;
   updatedDate: Date | string;
+  userId: string;
+  username: string;
 }

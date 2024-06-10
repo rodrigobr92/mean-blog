@@ -145,8 +145,8 @@ export class PostFormComponent implements OnInit {
     if (this.postForm && this.postForm.valid) {
       this.isLoading = true;
       this.postService.savePost(this.postForm.value);
-      this.postForm.reset();
-      this.router.navigateByUrl('/admin');
+      // this.postForm.reset();
+      // this.router.navigateByUrl('/admin');
       this.isLoading = false;
     }
   }

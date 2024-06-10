@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import PostSchema from '../models/post.schema';
-import checkAuth from '../middleware/check-auth';
+import checkAuth, { AuthenticatedRequest } from '../middleware/check-auth';
 
 const router = Router();
 
@@ -39,7 +39,7 @@ router.post(
   '',
   checkAuth,
   upload.single('image'),
-  (req, res) => {
+  (req: AuthenticatedRequest, res) => {
     let imagePath: string | undefined;
     if (req.file) {
       imagePath =
@@ -53,6 +53,8 @@ router.post(
       title: req.body.title,
       content: req.body.content,
       imagePath: imagePath,
+      userId: req.userData.userId,
+      username: req.userData.username,
       updatedDate: Date.now(),
       createdDate: Date.now(),
     });
@@ -70,7 +72,7 @@ router.put(
   '',
   checkAuth,
   upload.single('image'),
-  (req, res, next) => {
+  (req: AuthenticatedRequest, res, next) => {
     console.log(req.body);
     let imagePath = req.body.imagePath;
     if (req.file) {
@@ -88,12 +90,18 @@ router.put(
       imagePath: imagePath,
       updatedDate: Date.now(),
     });
-    PostSchema.updateOne({ _id: req.body._id }, post).then(
+    PostSchema.updateOne({ _id: req.body._id, userId: req.userData.userId }, post).then(
       (result) => {
-        console.log(result);
-        res
-          .status(200)
-          .json({ message: 'Update successful!' });
+        if(result.modifiedCount > 0) {
+          res
+            .status(200)
+            .json({ message: 'Update successful!' });
+          return;
+        } else {
+          res
+            .status(403)
+            .json({ message: 'You cannot edit from another user' });
+        }
       },
     );
   },
@@ -143,11 +151,15 @@ router.get('/:id', (req, res, next) => {
   });
 });
 
-router.delete('/:id', checkAuth, (req, res, next) => {
-  PostSchema.deleteOne({ _id: req.params.id }).then(
+router.delete('/:id', checkAuth, (req: AuthenticatedRequest, res, next) => {
+  PostSchema.deleteOne({ _id: req.params.id, userId: req.userData.userId }).then(
     (result) => {
       console.log(result);
-      res.status(200).json({ message: 'Post deleted!' });
+      if(result.deletedCount > 0) {
+        res.status(200).json({ message: 'Post deleted!' });
+      } else {
+        res.status(403).json({ message: 'You cannot delete posts from another user' });
+      }
     },
   );
 });
